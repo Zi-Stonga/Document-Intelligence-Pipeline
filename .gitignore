@@ -1,0 +1,16 @@
+.env
+*.pem
+*.key
+infra/.bootstrap-state
+infra/resources.env
+infra/kms/key-policy.json
+infra/iam/lambda-policy.json
+node_modules/
+function.zip
+*.zip
+dist/
+cdk.out/
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
