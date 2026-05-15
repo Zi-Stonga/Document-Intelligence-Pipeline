@@ -1,15 +1,36 @@
+# pii-pipeline-managed — do not remove this sentinel line
+
+# Secrets
 .env
 *.pem
 *.key
+
+# Bootstrap state and generated manifests — contain real ARNs and account IDs
 infra/.bootstrap-state
 infra/resources.env
+
+# Generated policy files — contain real account IDs and ARNs
 infra/kms/key-policy.json
 infra/iam/lambda-policy.json
+
+# Trust and policy docs written to repo root during manual build
+lambda-trust.json
+kms-admin-trust.json
+lambda-policy.json
+sqs-policy.json
+
+# Build artifacts
 node_modules/
 function.zip
 *.zip
 dist/
 cdk.out/
+
+# Temp files
+/tmp/
+*.tmp
+
+# OS and editor noise
 .DS_Store
 Thumbs.db
 .vscode/
