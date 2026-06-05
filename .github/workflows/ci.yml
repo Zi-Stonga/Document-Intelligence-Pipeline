@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    name: Lint and Format Check
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install lint tools
+        run: pip install ruff black isort mypy pydantic pydantic-settings boto3-stubs
+      - name: Black format check
+        run: black --check src tests
+      - name: isort check
+        run: isort --check-only src tests
+      - name: Ruff lint
+        run: ruff check src tests
+      - name: mypy type check
+        run: mypy src --strict
+
+  test:
+    name: Test with Coverage
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install pytest pytest-cov pytest-mock boto3 botocore pydantic pydantic-settings
+      - name: Run tests with coverage
+        run: pytest --cov=src --cov-report=term-missing --cov-fail-under=80
+
+  validate-policies:
+    name: Validate JSON Policies
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate infra JSON files
+        run: |
+          find infra -name "*.json" 2>/dev/null | while read f; do
+            echo "Validating: $f"
+            python3 -m json.tool "$f" > /dev/null || exit 1
+          done
+          echo "All JSON files valid"
+
+  security-scan:
+    name: Secret and Dependency Scan
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pip-audit
+        run: pip install pip-audit
+      - name: Audit dependencies for CVEs
+        run: pip-audit -r requirements.txt
+      - name: Check for API keys in source files
+        run: |
+          MATCHES=$(grep -r "sk-ant-" . \
+            --include="*.py" --include="*.json" --include="*.sh" \
+            2>/dev/null | grep -v ".git" || true)
+          if [ -n "$MATCHES" ]; then
+            echo "ERROR: Possible API key found"
+            echo "$MATCHES"
+            exit 1
+          fi
+          echo "No API keys found"
