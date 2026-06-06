@@ -1,6 +1,5 @@
 """Unit tests for src/utils/masking.py"""
 
-
 from src.models.pii_result import OtherPiiItem, PiiClassification
 from src.utils.masking import mask_ssns
 

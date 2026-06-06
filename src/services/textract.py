@@ -103,7 +103,7 @@ def _calculate_delay_ms(attempt: int, base_delay_ms: int) -> int:
     Returns:
         Delay in milliseconds.
     """
-    return base_delay_ms * (2 ** (attempt - 1))
+    return int(base_delay_ms * (2 ** (attempt - 1)))
 
 
 def _default_client() -> Any:

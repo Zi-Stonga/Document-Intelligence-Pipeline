@@ -184,7 +184,7 @@ def get_settings() -> Settings:
             or invalid.
     """
     try:
-        return Settings()
+        return Settings()  # type: ignore[call-arg]
     except Exception as exc:
         raise ConfigurationError(
             f"Configuration validation failed at startup: {exc}. "

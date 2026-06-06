@@ -49,7 +49,7 @@ def get_api_key(settings: Settings, client: Any = None) -> str:
     now = time.monotonic()
     if _is_cache_valid(now, settings.secret_cache_ttl_seconds):
         log_debug("api_key_cache_hit")
-        return _cache.value  # type: ignore[union-attr]
+        return _cache.value
 
     log_info("api_key_cache_miss", reason="expired_or_cold_start")
     api_key = _fetch_from_secrets_manager(settings, client or _default_client())

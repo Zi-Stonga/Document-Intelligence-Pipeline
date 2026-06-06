@@ -1,6 +1,5 @@
 """Unit tests for src/models/pii_result.py"""
 
-
 from src.models.pii_result import OtherPiiItem, PiiClassification
 
 
