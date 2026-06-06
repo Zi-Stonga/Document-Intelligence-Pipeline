@@ -111,7 +111,7 @@ class TestHandler:
         from src.models.pii_result import PiiClassification
 
         mock_extract.return_value = "some extracted text"
-        mock_api_key.return_value = "sk-ant-test"
+        mock_api_key.return_value = "test-api-key-fake"
         mock_classify.return_value = PiiClassification(names=["Jane"])
         mock_mask.return_value = PiiClassification(names=["Jane"])
         mock_vault.return_value = True
@@ -169,7 +169,7 @@ class TestHandler:
         from src.utils.exceptions import TextractError
 
         mock_extract.side_effect = ["extracted text", TextractError("failed")]
-        mock_api_key.return_value = "sk-ant-test"
+        mock_api_key.return_value = "test-api-key-fake"
         mock_classify.return_value = PiiClassification()
         mock_mask.return_value = PiiClassification()
         mock_vault.return_value = True

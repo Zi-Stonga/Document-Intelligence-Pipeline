@@ -11,7 +11,7 @@ from src.services.anthropic import classify_pii
 from src.utils.exceptions import ClassificationError
 
 TEXT = "Name: Jane Smith. SSN: 123-45-6789."
-API_KEY = "sk-ant-test-key"
+API_KEY = "test-api-key-fake-key"
 
 VALID_RESPONSE = {
     "content": [

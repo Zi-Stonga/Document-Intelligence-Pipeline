@@ -102,7 +102,7 @@ def _fetch_from_secrets_manager(settings: Settings, client: Any) -> str:
         raise SecretRetrievalError(
             f"Secret '{settings.anthropic_secret_name}' does not contain an "
             "api_key field or is not valid JSON. "
-            'Update the secret value to: {"api_key": "sk-ant-YOUR-KEY"}'
+            'Update the secret value to: {"api_key": "ANTHROPIC-API-KEY-HERE"}'
         ) from exc
 
     if not api_key or api_key.startswith("REPLACE_"):

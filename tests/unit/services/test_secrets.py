@@ -26,36 +26,36 @@ class TestGetApiKey:
     def test_returns_key_on_cache_miss(self, settings) -> None:
         # Arrange
         mock_client = MagicMock()
-        mock_client.get_secret_value.return_value = _sm_response("sk-ant-test-key")
+        mock_client.get_secret_value.return_value = _sm_response("test-api-key-fake")
         # Act
         result = secrets_module.get_api_key(settings, client=mock_client)
         # Assert
-        assert result == "sk-ant-test-key"
+        assert result == "test-api-key-fake"
         mock_client.get_secret_value.assert_called_once()
 
     def test_returns_cached_value_on_cache_hit(self, settings) -> None:
         # Arrange
         mock_client = MagicMock()
-        mock_client.get_secret_value.return_value = _sm_response("sk-ant-cached")
+        mock_client.get_secret_value.return_value = _sm_response("test-api-key-cached")
         # Act
         first = secrets_module.get_api_key(settings, client=mock_client)
         second = secrets_module.get_api_key(settings, client=mock_client)
         # Assert
-        assert first == second == "sk-ant-cached"
+        assert first == second == "test-api-key-cached"
         assert mock_client.get_secret_value.call_count == 1
 
     def test_refreshes_after_ttl_expires(self, settings) -> None:
         # Arrange
         mock_client = MagicMock()
-        mock_client.get_secret_value.return_value = _sm_response("sk-ant-new")
+        mock_client.get_secret_value.return_value = _sm_response("test-api-key-new")
         secrets_module._cache = secrets_module._CacheEntry(
-            value="sk-ant-old",
+            value="test-api-key-old",
             fetched_at=time.monotonic() - (settings.secret_cache_ttl_seconds + 1),
         )
         # Act
         result = secrets_module.get_api_key(settings, client=mock_client)
         # Assert
-        assert result == "sk-ant-new"
+        assert result == "test-api-key-new"
 
     def test_raises_on_placeholder_value(self, settings) -> None:
         # Arrange
